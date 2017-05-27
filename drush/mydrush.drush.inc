@@ -31,9 +31,7 @@ function mydrush_drush_command() {
 }
 
 /**
- * Call back function my_callback_drush_custom_drush_testing_demo()
- * The call back function name in the  following format
- *   drush_{module_name}_{item_id_for_command}()
+ * call back for create-node drush command
  */
 function create_node() {
   $type = drush_get_option('type');
