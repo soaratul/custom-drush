@@ -52,7 +52,7 @@ function create_node() {
     $data = ['type' => $type, 'title' => $title, 'body' => $body];
     $nodeManager = new NodeManager();
     if ($nodeManager->createNode($data)) {
-      return drush_log('Node created with title !title', ['!title' => $title], 'success');
+      return drush_log(dt('Node created with title !title', ['!title' => $title]), 'success');
     }
   }
   catch (Exception $ex) {
