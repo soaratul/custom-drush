@@ -24,11 +24,20 @@ Class NodeManager {
       ];
       $node = Node::create($values);
       $node->save();
-      if ($node->id()) {
-        return TRUE;
+      if ($nid = $node->id()) {
+        return $this->getNodeUrl($nid);
       }
     }
     return FALSE;
+  }
+
+  private function getNodeUrl($nid = NULL) {
+    global $base_url;
+    $alias = '';
+    if ($nid) {
+      $alias = \Drupal::service('path.alias_manager')->getAliasByPath('/node/' . $nid);
+    }
+    return $base_url . $alias;
   }
 
 }

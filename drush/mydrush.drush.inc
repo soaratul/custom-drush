@@ -36,11 +36,18 @@ function mydrush_drush_command() {
  *   drush_{module_name}_{item_id_for_command}()
  */
 function create_node() {
-  $type = drush_get_option('type');
+  $title = drush_get_option('type');
   $title = drush_get_option('title');
   $body = drush_get_option('body');
   if (!$type) {
-    $type = drush_prompt("Enter node type", NULL, TRUE);
+    $contentTypes = \Drupal::entityTypeManager()
+        ->getStorage('node_type')
+        ->loadMultiple();
+    $types = [];
+    foreach ($contentTypes as $contentType) {
+      $types[$contentType->getOriginalId()] = $contentType->label();
+    }
+    $type = drush_choice($types, dt("Choose content type"));
   }
   if (!$title) {
     $title = drush_prompt("Enter node title", NULL, TRUE);
@@ -51,8 +58,8 @@ function create_node() {
   try {
     $data = ['type' => $type, 'title' => $title, 'body' => $body];
     $nodeManager = new NodeManager();
-    if ($nodeManager->createNode($data)) {
-      return drush_log(dt('Node created with title !title', ['!title' => $title]), 'success');
+    if ($link = $nodeManager->createNode($data)) {
+      return drush_log(dt('Node created with title !title, click on !link link to open.', ['!title' => $title, '!link' => $link]), 'success');
     }
   }
   catch (Exception $ex) {
