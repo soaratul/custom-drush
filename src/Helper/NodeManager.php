@@ -28,8 +28,6 @@ Class NodeManager {
         return TRUE;
       }
     }
-    echo 555;
-    die;
     return FALSE;
   }
 
