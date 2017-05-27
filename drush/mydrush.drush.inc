@@ -36,23 +36,27 @@ function mydrush_drush_command() {
  *   drush_{module_name}_{item_id_for_command}()
  */
 function create_node() {
-  $title = drush_get_option('type');
+  $type = drush_get_option('type');
   $title = drush_get_option('title');
   $body = drush_get_option('body');
-  if (!$type) {
-    $contentTypes = \Drupal::entityTypeManager()
-        ->getStorage('node_type')
-        ->loadMultiple();
-    $types = [];
-    foreach ($contentTypes as $contentType) {
-      $types[$contentType->getOriginalId()] = $contentType->label();
-    }
+  // get content types
+  $contentTypes = \Drupal::entityTypeManager()
+      ->getStorage('node_type')
+      ->loadMultiple();
+  $types = [];
+  foreach ($contentTypes as $contentType) {
+    $types[$contentType->getOriginalId()] = $contentType->label();
+  }
+  if (!isset($type)) {
     $type = drush_choice($types, dt("Choose content type"));
   }
-  if (!$title) {
+  if (empty($type)) {
+    return drush_user_abort();
+  }
+  if (!isset($title)) {
     $title = drush_prompt("Enter node title", NULL, TRUE);
   }
-  if (!$body) {
+  if (!isset($body)) {
     $body = drush_prompt("Enter node body", NULL, TRUE);
   }
   try {
