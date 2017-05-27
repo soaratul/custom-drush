@@ -1,0 +1,5 @@
+name: My Drush
+type: module
+description: 'Few custom drush commands.'
+package: Custom
+core: 8.x
